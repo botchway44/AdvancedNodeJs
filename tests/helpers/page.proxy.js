@@ -3,24 +3,25 @@ const sessionFactory = require('../factories/session.factory');
 const userFactory = require('../factories/user.factory');
 
 
-class CustomPage{
+class CustomPage {
 
-  static async build(){
+  static async build() {
 
-   const browser = await puppeteer.launch({
-      headless: false
-  });
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox']
+    });
 
-  const _page = await browser.newPage();
+    const _page = await browser.newPage();
 
-  const customPage = new CustomPage(_page, browser);
+    const customPage = new CustomPage(_page, browser);
 
-  return new Proxy(customPage, {
-    get: function(customPage, property) {
-      // console.log("Property",property)
-      return customPage[property] || browser[property] || _page[property];
-    }
-  });
+    return new Proxy(customPage, {
+      get: function (customPage, property) {
+        // console.log("Property",property)
+        return customPage[property] || browser[property] || _page[property];
+      }
+    });
 
   }
 
@@ -31,15 +32,15 @@ class CustomPage{
     this.browser = browser;
   }
 
-  async login(){
+  async login() {
     const user = await userFactory();
 
-    const {session, sig} = await sessionFactory(user);
+    const { session, sig } = await sessionFactory(user);
 
-    await this.page.setCookie({name : "session", value : session});
-    await this.page.setCookie({name : "session.sig", value : sig});
+    await this.page.setCookie({ name: "session", value: session });
+    await this.page.setCookie({ name: "session.sig", value: sig });
 
-    await this.page.goto('localhost:3000');
+    await this.page.goto('http://localhost:3000');
     await this.page.waitFor('a[href="/auth/logout"]');
 
   }
@@ -53,4 +54,4 @@ class CustomPage{
 }
 
 
-module.exports = CustomPage
+module.exports = CustomPage;
