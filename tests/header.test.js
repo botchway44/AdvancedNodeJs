@@ -1,4 +1,3 @@
- const puppeteer = require('puppeteer');
 const Page = require('./helpers/page.proxy')
 
 test("Adds two numbers", ()=>{
@@ -13,11 +12,11 @@ let page;
 beforeEach( async ()=>{
      page = await Page.build();
 
-     console.log("Page >> ",page);
      await page.goto('localhost:3000');
 
 
 })
+
 
 
 afterEach(async ()=>{

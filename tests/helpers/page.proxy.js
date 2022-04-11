@@ -8,7 +8,7 @@ class CustomPage{
   static async build(){
 
    const browser = await puppeteer.launch({
-      headless: false,
+      headless: false
   });
 
   const _page = await browser.newPage();
@@ -17,7 +17,7 @@ class CustomPage{
 
   return new Proxy(customPage, {
     get: function(customPage, property) {
-      console.log("Property",property)
+      // console.log("Property",property)
       return customPage[property] || browser[property] || _page[property];
     }
   });
@@ -33,7 +33,6 @@ class CustomPage{
 
   async login(){
     const user = await userFactory();
-    console.log(user.toString());
 
     const {session, sig} = await sessionFactory(user);
 
@@ -45,6 +44,9 @@ class CustomPage{
 
   }
 
+  async getContentsOf(selector) {
+    return await this.page.$eval(selector, el => el.innerHTML);
+  }
   close() {
     this.browser.close();
   }
