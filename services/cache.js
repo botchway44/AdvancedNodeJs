@@ -6,7 +6,7 @@ const { mongo } = require('mongoose');
 
 const redisUrl = keys.redisUrl;
 
-const client = redis.createClient();
+const client = redis.createClient(redisUrl);
 
 client.on("error", function (err) {
     console.log("Error " + err);

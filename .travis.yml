@@ -6,6 +6,18 @@ services:
   - mongodb
   - redis-server
 
+sudo: required
+
+addons:
+  chrome: stable
+  hostname: localhost
+
+before_install:
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+
+before_script:
+  - nohup npm run start &
+
 env:
   - NODE_ENV = ci
   - PORT = 3000
@@ -19,6 +31,5 @@ install:
   - npm run build
 
 scripts:
-  - nohup npm run start &
   - sleep 3
   - npm run test
